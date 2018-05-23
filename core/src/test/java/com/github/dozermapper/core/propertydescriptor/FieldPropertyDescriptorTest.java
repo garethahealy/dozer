@@ -37,13 +37,13 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test(expected = MappingException.class)
     public void testNoSuchField() {
-        new FieldPropertyDescriptor(String.class, "nosuchfield", false, 0, null, null, destBeanCreator);
+        new FieldPropertyDescriptor(String.class, "nosuchfield", false, 0, destBeanCreator);
         fail();
     }
 
     @Test
     public void testConstructor() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "hidden", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "hidden", false, 0, destBeanCreator);
         assertNotNull(descriptor);
         assertEquals(Integer.TYPE, descriptor.getPropertyType());
         assertNotNull(descriptor.getPropertyValue(new Container()));
@@ -51,33 +51,33 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test
     public void getPropertyType() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "hidden", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "hidden", false, 0, destBeanCreator);
         assertEquals(Integer.TYPE, descriptor.getPropertyType());
     }
 
     @Test
     public void getPropertyTypeChained() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, destBeanCreator);
         assertEquals(String.class, descriptor.getPropertyType());
     }
 
     @Test
     public void getPropertyValue() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "hidden", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "hidden", false, 0, destBeanCreator);
         Object result = descriptor.getPropertyValue(new Container());
         assertEquals(42, result);
     }
 
     @Test
     public void getPropertyValueChained() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.hidden", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.hidden", false, 0,  destBeanCreator);
         Object result = descriptor.getPropertyValue(new Container("A"));
         assertEquals(42, result);
     }
 
     @Test
     public void setPropertyValue() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "value", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "value", false, 0, destBeanCreator);
         Container bean = new Container("A");
         descriptor.setPropertyValue(bean, "B", mock(FieldMap.class));
         assertEquals("B", bean.value);
@@ -85,7 +85,7 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test
     public void setPropertyValueChained() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, destBeanCreator);
         Container bean = new Container("");
         bean.container = new Container("");
 
@@ -96,7 +96,7 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test
     public void setPropertyValueChained_ThirdLevel() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.container.value", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.container.value", false, 0, destBeanCreator);
         Container bean = new Container("X");
         bean.container = new Container("X");
         bean.container.container = new Container("X");
@@ -108,7 +108,7 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test
     public void setPropertyValueChained_IntermediateNull() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, destBeanCreator);
         Container bean = new Container("");
 
         descriptor.setPropertyValue(bean, "A", mock(FieldMap.class));
@@ -118,7 +118,7 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test
     public void getPropertyValueChained_IntermediateNull() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "container.value", false, 0, destBeanCreator);
         Container bean = new Container("");
         Object value = descriptor.getPropertyValue(bean);
         assertEquals("", value);
@@ -126,7 +126,7 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test
     public void getPropertyValueIndexed() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "values", true, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "values", true, 0, destBeanCreator);
         Container container = new Container("");
         container.values.add("A");
         Object value = descriptor.getPropertyValue(container);
@@ -135,7 +135,7 @@ public class FieldPropertyDescriptorTest extends AbstractDozerTest {
 
     @Test
     public void setPropertyValueIndexed() {
-        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "values", true, 0, null, null, destBeanCreator);
+        FieldPropertyDescriptor descriptor = new FieldPropertyDescriptor(Container.class, "values", true, 0, destBeanCreator);
         Container container = new Container("");
         descriptor.setPropertyValue(container, "A", mock(FieldMap.class));
         assertEquals(1, container.values.size());

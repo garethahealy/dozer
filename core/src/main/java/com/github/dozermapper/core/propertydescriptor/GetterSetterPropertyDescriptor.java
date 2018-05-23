@@ -40,9 +40,16 @@ import org.slf4j.LoggerFactory;
  * underlying dozer specific logic such as index mapping and deep mapping for reading and writing field values. Only
  * intended for internal use.
  */
-public abstract class GetterSetterPropertyDescriptor extends AbstractPropertyDescriptor {
+public abstract class GetterSetterPropertyDescriptor implements DozerPropertyDescriptor {
 
     private final Logger log = LoggerFactory.getLogger(GetterSetterPropertyDescriptor.class);
+
+    protected final Class<?> clazz;
+    protected final String fieldName;
+    private final boolean isIndexed;
+    private final int index;
+    protected final HintContainer srcDeepIndexHintContainer;
+    protected final HintContainer destDeepIndexHintContainer;
 
     private Class<?> propertyType;
     protected final BeanContainer beanContainer;
@@ -51,7 +58,12 @@ public abstract class GetterSetterPropertyDescriptor extends AbstractPropertyDes
     public GetterSetterPropertyDescriptor(Class<?> clazz, String fieldName, boolean isIndexed, int index,
                                           HintContainer srcDeepIndexHintContainer, HintContainer destDeepIndexHintContainer,
                                           BeanContainer beanContainer, DestBeanCreator destBeanCreator) {
-        super(clazz, fieldName, isIndexed, index, srcDeepIndexHintContainer, destDeepIndexHintContainer);
+        this.clazz = clazz;
+        this.fieldName = fieldName;
+        this.isIndexed = isIndexed;
+        this.index = index;
+        this.srcDeepIndexHintContainer = srcDeepIndexHintContainer;
+        this.destDeepIndexHintContainer = destDeepIndexHintContainer;
         this.beanContainer = beanContainer;
         this.destBeanCreator = destBeanCreator;
     }

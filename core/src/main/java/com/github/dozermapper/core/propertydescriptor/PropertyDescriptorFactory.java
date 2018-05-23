@@ -71,7 +71,7 @@ public final class PropertyDescriptorFactory {
 
             // Access field directly and bypass getter/setters
         } else if (isAccessible) {
-            desc = new FieldPropertyDescriptor(clazz, name, isIndexed, index, srcDeepIndexHintContainer, destDeepIndexHintContainer, destBeanCreator);
+            desc = new FieldPropertyDescriptor(clazz, name, isIndexed, index, destBeanCreator);
 
             // Custom get-method/set specified
         } else if (theSetMethod != null || theGetMethod != null) {

@@ -20,7 +20,6 @@ import java.lang.reflect.Type;
 
 import com.github.dozermapper.core.factory.DestBeanCreator;
 import com.github.dozermapper.core.fieldmap.FieldMap;
-import com.github.dozermapper.core.fieldmap.HintContainer;
 import com.github.dozermapper.core.util.DozerConstants;
 import com.github.dozermapper.core.util.MappingUtils;
 import com.github.dozermapper.core.util.ReflectionUtils;
@@ -29,15 +28,14 @@ import com.github.dozermapper.core.util.ReflectionUtils;
  * Internal class that directly accesses the field via reflection. The getter/setter methods for the field are bypassed
  * and will NOT be invoked. Private fields are accessible by Dozer. Only intended for internal use.
  */
-public class FieldPropertyDescriptor extends AbstractPropertyDescriptor implements DozerPropertyDescriptor {
+public class FieldPropertyDescriptor implements DozerPropertyDescriptor {
 
     private final DozerPropertyDescriptor[] descriptorChain;
     private final DestBeanCreator destBeanCreator;
 
-    public FieldPropertyDescriptor(Class<?> clazz, String fieldName, boolean isIndexed, int index,
-                                   HintContainer srcDeepIndexHintContainer, HintContainer destDeepIndexHintContainer,
-                                   DestBeanCreator destBeanCreator) {
-        super(clazz, fieldName, isIndexed, index, srcDeepIndexHintContainer, destDeepIndexHintContainer);
+
+
+    public FieldPropertyDescriptor(Class<?> clazz, String fieldName, boolean isIndexed, int index, DestBeanCreator destBeanCreator) {
         this.destBeanCreator = destBeanCreator;
 
         String[] tokens = fieldName.split(DozerConstants.DEEP_FIELD_DELIMITER_REGEXP);

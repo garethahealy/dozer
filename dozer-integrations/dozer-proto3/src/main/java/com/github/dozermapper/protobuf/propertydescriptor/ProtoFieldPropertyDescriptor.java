@@ -25,7 +25,7 @@ import com.github.dozermapper.core.config.BeanContainer;
 import com.github.dozermapper.core.factory.DestBeanCreator;
 import com.github.dozermapper.core.fieldmap.FieldMap;
 import com.github.dozermapper.core.fieldmap.HintContainer;
-import com.github.dozermapper.core.propertydescriptor.AbstractPropertyDescriptor;
+import com.github.dozermapper.core.propertydescriptor.DozerPropertyDescriptor;
 import com.github.dozermapper.core.propertydescriptor.PropertyDescriptorFactory;
 import com.github.dozermapper.core.util.DeepHierarchyUtils;
 import com.github.dozermapper.core.util.MappingUtils;
@@ -40,10 +40,16 @@ import org.slf4j.LoggerFactory;
 /**
  * {@link com.github.dozermapper.core.propertydescriptor.DozerPropertyDescriptor} which resolves Protobuf fields
  */
-class ProtoFieldPropertyDescriptor extends AbstractPropertyDescriptor {
+class ProtoFieldPropertyDescriptor implements DozerPropertyDescriptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProtoFieldPropertyDescriptor.class);
 
+    private final Class<?> clazz;
+    private final String fieldName;
+    private final boolean isIndexed;
+    private final int index;
+    private final HintContainer srcDeepIndexHintContainer;
+    private final HintContainer destDeepIndexHintContainer;
     private final BeanContainer beanContainer;
     private final DestBeanCreator destBeanCreator;
     private final PropertyDescriptorFactory propertyDescriptorFactory;
@@ -68,8 +74,12 @@ class ProtoFieldPropertyDescriptor extends AbstractPropertyDescriptor {
     ProtoFieldPropertyDescriptor(Class<?> clazz, String fieldName, boolean isIndexed, int index, HintContainer srcDeepIndexHintContainer,
                                         HintContainer destDeepIndexHintContainer, BeanContainer beanContainer, DestBeanCreator destBeanCreator,
                                         PropertyDescriptorFactory propertyDescriptorFactory) {
-        super(clazz, fieldName, isIndexed, index, srcDeepIndexHintContainer, destDeepIndexHintContainer);
-
+        this.clazz = clazz;
+        this.fieldName = fieldName;
+        this.isIndexed = isIndexed;
+        this.index = index;
+        this.srcDeepIndexHintContainer = srcDeepIndexHintContainer;
+        this.destDeepIndexHintContainer = destDeepIndexHintContainer;
         this.beanContainer = beanContainer;
         this.destBeanCreator = destBeanCreator;
         this.propertyDescriptorFactory = propertyDescriptorFactory;
