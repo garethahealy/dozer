@@ -26,11 +26,11 @@ import com.github.dozermapper.core.factory.BeanCreationDirective;
 import com.github.dozermapper.core.factory.DestBeanCreator;
 import com.github.dozermapper.core.fieldmap.FieldMap;
 import com.github.dozermapper.core.fieldmap.HintContainer;
-import com.github.dozermapper.core.util.BridgedMethodFinder;
+import com.github.dozermapper.core.propertydescriptor.utils.BridgedMethodFinder;
+import com.github.dozermapper.core.propertydescriptor.utils.TypeResolver;
 import com.github.dozermapper.core.util.CollectionUtils;
 import com.github.dozermapper.core.util.MappingUtils;
 import com.github.dozermapper.core.util.ReflectionUtils;
-import com.github.dozermapper.core.util.TypeResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.dozermapper.core.util;
+package com.github.dozermapper.protobuf.propertydescriptor.utils;
 
 import java.util.Collection;
 import java.util.StringTokenizer;
@@ -23,14 +23,31 @@ import com.github.dozermapper.core.factory.DestBeanCreator;
 import com.github.dozermapper.core.fieldmap.HintContainer;
 import com.github.dozermapper.core.propertydescriptor.DozerPropertyDescriptor;
 import com.github.dozermapper.core.propertydescriptor.PropertyDescriptorFactory;
+import com.github.dozermapper.core.util.DozerConstants;
+import com.github.dozermapper.core.util.MappingUtils;
 
+/**
+ * Utility methods to resolve {@link DozerPropertyDescriptor}
+ */
 public final class DeepHierarchyUtils {
 
     private DeepHierarchyUtils() {
 
     }
 
-    // Copy-paste from GetterSetterPropertyDescriptor
+    /**
+     * Get field value
+     *
+     * @param srcObj                    source object
+     * @param fieldName                 field name
+     * @param isIndexed                 is an indexed field
+     * @param index                     index value
+     * @param srcDeepIndexHintContainer source hint container to use
+     * @param beanContainer             bean container to use
+     * @param destBeanCreator           bean creator to use
+     * @param propertyDescriptorFactory factory to use
+     * @return resolved value
+     */
     public static Object getDeepFieldValue(Object srcObj, String fieldName, boolean isIndexed, int index, HintContainer srcDeepIndexHintContainer,
                                            BeanContainer beanContainer, DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
         // follow deep field hierarchy. If any values are null along the way, then return null
@@ -54,6 +71,17 @@ public final class DeepHierarchyUtils {
         return hierarchyValue;
     }
 
+    /**
+     * Get field type
+     *
+     * @param clazz                     clazz type to resolve
+     * @param fieldName                 field name to resolve
+     * @param deepIndexHintContainer    hint container to use
+     * @param beanContainer             bean container to use
+     * @param destBeanCreator           bean creator to use
+     * @param propertyDescriptorFactory factory to use
+     * @return resolved type
+     */
     public static Class<?> getDeepFieldType(Class<?> clazz, String fieldName, HintContainer deepIndexHintContainer, BeanContainer beanContainer,
                                             DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
         // follow deep field hierarchy. If any values are null along the way, then return null
@@ -61,6 +89,17 @@ public final class DeepHierarchyUtils {
         return hierarchy[hierarchy.length - 1].getPropertyType();
     }
 
+    /**
+     * Get generic type
+     *
+     * @param clazz                     clazz type to resolve
+     * @param fieldName                 field name to resolve
+     * @param deepIndexHintContainer    hint container to use
+     * @param beanContainer             bean container to use
+     * @param destBeanCreator           bean creator to use
+     * @param propertyDescriptorFactory factory to use
+     * @return resolved type
+     */
     public static Class<?> getDeepGenericType(Class<?> clazz, String fieldName, HintContainer deepIndexHintContainer, BeanContainer beanContainer,
                                               DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
         // follow deep field hierarchy. If any values are null along the way, then return null
@@ -95,8 +134,8 @@ public final class DeepHierarchyUtils {
                                                                                                      false, null, null, null,
                                                                                                      null, beanContainer,
                                                                                                      destBeanCreator); //we can pass null as a hint container -
-                                                                                                                        // if genericType return null - we will use hintContainer
-                                                                                                                        // in the underlying if
+            // if genericType return null - we will use hintContainer
+            // in the underlying if
             if (propDescriptor == null) {
                 MappingUtils.throwMappingException("Exception occurred determining deep field hierarchy for Class --> "
                                                    + parentClass.getName() + ", Field --> " + field + ".  Unable to determine property descriptor for Class --> "

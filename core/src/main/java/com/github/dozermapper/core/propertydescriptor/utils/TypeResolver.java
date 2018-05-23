@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.dozermapper.core.util;
+package com.github.dozermapper.core.propertydescriptor.utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
