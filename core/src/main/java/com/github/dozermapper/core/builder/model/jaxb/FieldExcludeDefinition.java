@@ -78,11 +78,23 @@ public class FieldExcludeDefinition {
         return a;
     }
 
+    public FieldExcludeDefinition withA(FieldDefinitionDefinition a) {
+        setA(a);
+
+        return this;
+    }
+
     public FieldDefinitionDefinition withB() {
         FieldDefinitionDefinition b = new FieldDefinitionDefinition(this, null);
         setB(b);
 
         return b;
+    }
+
+    public FieldExcludeDefinition withB(FieldDefinitionDefinition b) {
+        setB(b);
+
+        return this;
     }
 
     public FieldExcludeDefinition withType(Type type) {

@@ -114,6 +114,10 @@ public class ClassDefinition {
 
     // Fluent API
     //-------------------------------------------------------------------------
+    public ClassDefinition withClazz(Class<?> clazz) {
+        return withClazz(clazz.getName());
+    }
+
     public ClassDefinition withClazz(String clazz) {
         setClazz(clazz);
 

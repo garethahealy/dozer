@@ -151,6 +151,12 @@ public class FieldDefinition {
         return a;
     }
 
+    public FieldDefinition withA(FieldDefinitionDefinition a) {
+        setA(a);
+
+        return this;
+    }
+
     public FieldDefinitionDefinition withB() {
         FieldDefinitionDefinition b = new FieldDefinitionDefinition(parentFieldExclude, this);
         setB(b);
@@ -158,8 +164,20 @@ public class FieldDefinition {
         return b;
     }
 
+    public FieldDefinition withB(FieldDefinitionDefinition b) {
+        setB(b);
+
+        return this;
+    }
+
     public FieldDefinition withAHint(String aHint) {
         setAHint(aHint);
+
+        return this;
+    }
+
+    public FieldDefinition withAHints(Class<?>... types) {
+        setAHint(mergeTypeNames(types));
 
         return this;
     }
@@ -170,14 +188,32 @@ public class FieldDefinition {
         return this;
     }
 
+    public FieldDefinition withBHints(Class<?>... types) {
+        setBHint(mergeTypeNames(types));
+
+        return this;
+    }
+
     public FieldDefinition withADeepIndexHint(String aDeepIndexHint) {
         setADeepIndexHint(aDeepIndexHint);
 
         return this;
     }
 
+    public FieldDefinition withADeepIndexHints(Class<?>... types) {
+        setADeepIndexHint(mergeTypeNames(types));
+
+        return this;
+    }
+
     public FieldDefinition withBDeepIndexHint(String bDeepIndexHint) {
         setBDeepIndexHint(bDeepIndexHint);
+
+        return this;
+    }
+
+    public FieldDefinition withBDeepIndexHints(Class<?>... types) {
+        setBDeepIndexHint(mergeTypeNames(types));
 
         return this;
     }
@@ -232,6 +268,15 @@ public class FieldDefinition {
 
     public MappingDefinition end() {
         return parentMappingDefinition;
+    }
+
+    private String mergeTypeNames(Class<?>[] type) {
+        String[] typeNames = new String[type.length];
+        for (int i = 0; i < type.length; i++) {
+            Class<?> t = type[i];
+            typeNames[i] = t.getName();
+        }
+        return StringUtils.join(typeNames, ",");
     }
 
     public FieldMap build(ClassMap classMap, BeanContainer beanContainer, DestBeanCreator destBeanCreator, PropertyDescriptorFactory propertyDescriptorFactory) {
