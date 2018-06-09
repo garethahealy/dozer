@@ -20,9 +20,10 @@ import java.lang.reflect.Type;
 
 import com.github.dozermapper.core.factory.DestBeanCreator;
 import com.github.dozermapper.core.fieldmap.FieldMap;
+import com.github.dozermapper.core.invocation.type.ClassTypeResolver;
+import com.github.dozermapper.core.invocation.type.LegacyReflectionClassTypeResolver;
 import com.github.dozermapper.core.util.DozerConstants;
 import com.github.dozermapper.core.util.MappingUtils;
-import com.github.dozermapper.core.util.ReflectionUtils;
 
 /**
  * Internal class that directly accesses the field via reflection. The getter/setter methods for the field are bypassed
@@ -32,11 +33,11 @@ public class FieldPropertyDescriptor implements DozerPropertyDescriptor {
 
     private final DozerPropertyDescriptor[] descriptorChain;
     private final DestBeanCreator destBeanCreator;
-
-
+    private final ClassTypeResolver reflectionTypeResolver;
 
     public FieldPropertyDescriptor(Class<?> clazz, String fieldName, boolean isIndexed, int index, DestBeanCreator destBeanCreator) {
         this.destBeanCreator = destBeanCreator;
+        this.reflectionTypeResolver = new LegacyReflectionClassTypeResolver();
 
         String[] tokens = fieldName.split(DozerConstants.DEEP_FIELD_DELIMITER_REGEXP);
         descriptorChain = new DozerPropertyDescriptor[tokens.length];
@@ -46,7 +47,7 @@ public class FieldPropertyDescriptor implements DozerPropertyDescriptor {
             String token = tokens[i];
             descriptorChain[i] = new ChainedPropertyDescriptor(currentType, token, isIndexed, index);
             if (i < tokensLength) {
-                Field field = ReflectionUtils.getFieldFromBean(currentType, tokens[i]);
+                Field field = reflectionTypeResolver.getFieldFromBean(currentType, tokens[i]);
                 currentType = field.getType();
             }
         }
@@ -93,11 +94,14 @@ public class FieldPropertyDescriptor implements DozerPropertyDescriptor {
         private Field field;
         private boolean indexed;
         private int index;
+        private final ClassTypeResolver reflectionTypeResolver;
 
         ChainedPropertyDescriptor(Class<?> clazz, String fieldName, boolean indexed, int index) {
             this.indexed = indexed;
             this.index = index;
-            field = ReflectionUtils.getFieldFromBean(clazz, fieldName);
+            this.reflectionTypeResolver = new LegacyReflectionClassTypeResolver();
+
+            field = reflectionTypeResolver.getFieldFromBean(clazz, fieldName);
         }
 
         public Class<?> getPropertyType() {
@@ -145,7 +149,7 @@ public class FieldPropertyDescriptor implements DozerPropertyDescriptor {
 
         public Class<?> genericType() {
             Type type = field.getGenericType();
-            return ReflectionUtils.determineGenericsType(type);
+            return reflectionTypeResolver.determineGenericsType(type);
         }
     }
 

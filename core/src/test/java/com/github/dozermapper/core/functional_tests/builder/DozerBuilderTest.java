@@ -52,7 +52,7 @@ public class DozerBuilderTest {
                                 FieldsMappingOptions.hintB(Integer.class),
                                 FieldsMappingOptions.oneWay(),
                                 FieldsMappingOptions.useMapId("A"),
-                                FieldsMappingOptions.customConverterId("id")
+                                FieldsMappingOptions.customConverterId("id"),
                         )
                         .fields("src", "dest",
                                 FieldsMappingOptions.customConverter("com.github.dozermapper.core.CustomConverter")

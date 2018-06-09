@@ -26,6 +26,8 @@ import com.github.dozermapper.core.factory.BeanCreationDirective;
 import com.github.dozermapper.core.factory.DestBeanCreator;
 import com.github.dozermapper.core.fieldmap.FieldMap;
 import com.github.dozermapper.core.fieldmap.HintContainer;
+import com.github.dozermapper.core.invocation.type.ClassTypeResolver;
+import com.github.dozermapper.core.invocation.type.LegacyReflectionClassTypeResolver;
 import com.github.dozermapper.core.propertydescriptor.utils.BridgedMethodFinder;
 import com.github.dozermapper.core.propertydescriptor.utils.TypeResolver;
 import com.github.dozermapper.core.util.CollectionUtils;
@@ -55,6 +57,8 @@ public abstract class GetterSetterPropertyDescriptor implements DozerPropertyDes
     protected final BeanContainer beanContainer;
     protected final DestBeanCreator destBeanCreator;
 
+    private final ClassTypeResolver reflectionTypeResolver;
+
     public GetterSetterPropertyDescriptor(Class<?> clazz, String fieldName, boolean isIndexed, int index,
                                           HintContainer srcDeepIndexHintContainer, HintContainer destDeepIndexHintContainer,
                                           BeanContainer beanContainer, DestBeanCreator destBeanCreator) {
@@ -66,6 +70,7 @@ public abstract class GetterSetterPropertyDescriptor implements DozerPropertyDes
         this.destDeepIndexHintContainer = destDeepIndexHintContainer;
         this.beanContainer = beanContainer;
         this.destBeanCreator = destBeanCreator;
+        this.reflectionTypeResolver = new LegacyReflectionClassTypeResolver();
     }
 
     protected abstract Method getWriteMethod() throws NoSuchMethodException;
@@ -184,7 +189,7 @@ public abstract class GetterSetterPropertyDescriptor implements DozerPropertyDes
                                                               hierarchyElement.getIndex());
                 } else if (Collection.class.isAssignableFrom(clazz)) {
 
-                    Class<?> genericType = ReflectionUtils.determineGenericsType(parentObj.getClass(), pd);
+                    Class<?> genericType = reflectionTypeResolver.determineGenericsType(parentObj.getClass(), pd);
                     if (genericType != null) {
                         collectionEntryType = genericType;
                     } else {
@@ -220,7 +225,7 @@ public abstract class GetterSetterPropertyDescriptor implements DozerPropertyDes
                     collectionEntryType = pd.getPropertyType().getComponentType();
 
                     if (collectionEntryType == null) {
-                        collectionEntryType = ReflectionUtils.determineGenericsType(parentObj.getClass(), pd);
+                        collectionEntryType = reflectionTypeResolver.determineGenericsType(parentObj.getClass(), pd);
 
                         // if the target list is a List that doesn't have type specified, we can
                         // try to use the deep-index-hint.  If the list has more than 1 element, there is no
@@ -373,7 +378,7 @@ public abstract class GetterSetterPropertyDescriptor implements DozerPropertyDes
         Class<?> genericType = null;
         try {
             Method method = getWriteMethod();
-            genericType = ReflectionUtils.determineGenericsType(clazz, method, false);
+            genericType = reflectionTypeResolver.determineGenericsType(clazz, method, false);
         } catch (NoSuchMethodException e) {
             log.warn("The destination object: {} does not have a write method for property : {}", e);
         }
